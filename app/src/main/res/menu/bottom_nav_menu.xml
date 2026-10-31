@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_overview"
+        android:icon="@drawable/ic_nav_overview"
+        android:title="@string/title_overview" />
+    <item
+        android:id="@+id/navigation_classes"
+        android:icon="@drawable/ic_nav_classes"
+        android:title="@string/title_classes" />
+    <item
+        android:id="@+id/navigation_assignments"
+        android:icon="@drawable/ic_nav_assignments"
+        android:title="@string/title_assignments" />
+    <item
+        android:id="@+id/navigation_exams"
+        android:icon="@drawable/ic_nav_exams"
+        android:title="@string/title_exams" />
+</menu>
+
