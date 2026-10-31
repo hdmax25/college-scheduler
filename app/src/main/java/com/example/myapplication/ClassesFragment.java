@@ -1,10 +1,10 @@
 package com.example.myapplication;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,7 +21,8 @@ import java.util.List;
 
 /**
  * Fragment untuk menampilkan daftar Kelas.
- * Terhubung ke InMemoryRepository untuk membaca data Kelas dan menampilkan kondisi kosong (empty state).
+ * Terhubung ke InMemoryRepository untuk membaca data Kelas, menampilkan kondisi kosong (empty state),
+ * dan membuka ClassFormActivity untuk mode tambah serta ubah.
  */
 public class ClassesFragment extends Fragment {
 
@@ -60,15 +61,17 @@ public class ClassesFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         adapter.setOnItemClickListener(courseClass -> {
-            // Callback klik item kelas (akan dihubungkan ke form ubah di FE-05)
-            Toast.makeText(requireContext(), courseClass.getName(), Toast.LENGTH_SHORT).show();
+            // Mode Ubah: buka form dengan menyertakan ID kelas yang dipilih
+            Intent intent = ClassFormActivity.newIntent(requireContext(), courseClass.getId());
+            startActivity(intent);
         });
     }
 
     private void setupListeners() {
         View.OnClickListener addClickListener = v -> {
-            // Callback tombol tambah (akan membuka form tambah di FE-05)
-            Toast.makeText(requireContext(), getString(R.string.form_class_title_add), Toast.LENGTH_SHORT).show();
+            // Mode Tambah: buka form dengan ID -1
+            Intent intent = ClassFormActivity.newIntent(requireContext(), -1);
+            startActivity(intent);
         };
 
         fabAddClass.setOnClickListener(addClickListener);

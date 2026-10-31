@@ -104,4 +104,10 @@
     <string name="format_schedule">%1$s • %2$s - %3$s</string>
     <string name="content_description_add_class">Tambah Kelas Baru</string>
     <string name="btn_add_first_class">Tambah Kelas Sekarang</string>
+    <string name="nav_back_content_description">Kembali</string>
+    <string name="dialog_select_days">Pilih Hari Kuliah</string>
+    <string name="picker_start_time">Pilih Jam Mulai</string>
+    <string name="picker_end_time">Pilih Jam Selesai</string>
+    <string name="msg_class_added">Kelas berhasil ditambahkan</string>
+    <string name="msg_class_updated">Kelas berhasil diperbarui</string>
 </resources>
