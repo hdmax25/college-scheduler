@@ -1,7 +1,101 @@
 <resources>
+    <!-- Nama Aplikasi -->
     <string name="app_name">College Scheduler</string>
+
+    <!-- Navigasi Utama -->
     <string name="title_overview">Ringkasan</string>
     <string name="title_classes">Kelas</string>
     <string name="title_assignments">Tugas</string>
     <string name="title_exams">Ujian</string>
+
+    <!-- Tombol & Aksi Umum -->
+    <string name="action_add">Tambah</string>
+    <string name="action_edit">Ubah</string>
+    <string name="action_delete">Hapus</string>
+    <string name="action_save">Simpan</string>
+    <string name="action_cancel">Batal</string>
+    <string name="action_close">Tutup</string>
+    <string name="action_filter">Filter</string>
+    <string name="action_sort">Urutkan</string>
+    <string name="action_mark_complete">Tandai Selesai</string>
+    <string name="action_mark_incomplete">Tandai Belum Selesai</string>
+
+    <!-- Kondisi Kosong (Empty States) -->
+    <string name="empty_data_default">Belum ada data</string>
+    <string name="empty_classes">Belum ada kelas yang ditambahkan</string>
+    <string name="empty_assignments">Belum ada tugas yang ditambahkan</string>
+    <string name="empty_exams">Belum ada ujian yang ditambahkan</string>
+    <string name="empty_overview">Belum ada tugas, ujian, atau pekerjaan</string>
+    <string name="empty_filter_results">Tidak ada item yang cocok</string>
+
+    <!-- Kriteria Pengurutan (Sort) -->
+    <string name="sort_title">Urutkan Berdasarkan</string>
+    <string name="sort_by_name">Nama</string>
+    <string name="sort_by_due_date">Tenggat</string>
+    <string name="sort_by_course">Mata Kuliah</string>
+
+    <!-- Kriteria Penyaringan (Filter) -->
+    <string name="filter_title">Filter Status</string>
+    <string name="filter_all">Semua</string>
+    <string name="filter_incomplete">Belum Selesai</string>
+    <string name="filter_completed">Selesai</string>
+
+    <!-- Status Penyelesaian Item -->
+    <string name="status_completed">Selesai</string>
+    <string name="status_incomplete">Belum Selesai</string>
+
+    <!-- Jenis Item -->
+    <string name="type_assignment">Tugas</string>
+    <string name="type_exam">Ujian</string>
+    <string name="type_task">Pekerjaan</string>
+
+    <!-- Form Kelas (Class Form) -->
+    <string name="form_class_title_add">Tambah Kelas</string>
+    <string name="form_class_title_edit">Ubah Kelas</string>
+    <string name="form_class_label_name">Nama Kelas</string>
+    <string name="form_class_hint_name">Contoh: Pemrograman Bergerak</string>
+    <string name="form_class_label_days">Hari Kuliah</string>
+    <string name="form_class_hint_days">Pilih hari kuliah</string>
+    <string name="form_class_label_start_time">Jam Mulai</string>
+    <string name="form_class_label_end_time">Jam Selesai</string>
+    <string name="form_class_label_room">Ruang dan Lokasi</string>
+    <string name="form_class_hint_room">Contoh: Lab Komputer 2 (Opsional)</string>
+    <string name="form_class_label_section">Seksi</string>
+    <string name="form_class_hint_section">Contoh: RA / 01 (Opsional)</string>
+    <string name="form_class_label_professor">Dosen</string>
+    <string name="form_class_hint_professor">Nama dosen pengampu (Opsional)</string>
+
+    <!-- Form Item: Tugas, Ujian, Pekerjaan (Item Form) -->
+    <string name="form_item_title_add">Tambah Item</string>
+    <string name="form_item_title_edit">Ubah Item</string>
+    <string name="form_item_label_type">Jenis Item</string>
+    <string name="form_item_label_name">Nama</string>
+    <string name="form_item_hint_name">Contoh: Tugas Praktikum 1</string>
+    <string name="form_item_label_course">Mata Kuliah</string>
+    <string name="form_item_hint_course">Masukkan nama mata kuliah</string>
+    <string name="form_item_label_date">Tanggal</string>
+    <string name="form_item_label_time">Jam</string>
+    <string name="form_item_label_due_date_time">Tenggat (Tanggal &amp; Jam)</string>
+    <string name="form_exam_label_date_time">Waktu Ujian (Tanggal &amp; Jam)</string>
+    <string name="form_exam_label_location">Lokasi Ujian</string>
+    <string name="form_exam_hint_location">Contoh: Gedung B Ruang 301 (Opsional)</string>
+
+    <!-- Pesan Validasi Error (Validation Errors) -->
+    <string name="error_name_required">Nama wajib diisi</string>
+    <string name="error_course_required">Mata kuliah wajib diisi</string>
+    <string name="error_date_time_required">Tanggal dan jam harus terisi lengkap</string>
+    <string name="error_end_time_before_start">Jam selesai harus setelah jam mulai</string>
+    <string name="error_days_required">Pilih minimal satu hari kuliah</string>
+
+    <!-- Dialog Konfirmasi Hapus (Confirmation Dialogs) -->
+    <string name="dialog_delete_title">Konfirmasi Hapus</string>
+    <string name="dialog_delete_class_title">Hapus Kelas</string>
+    <string name="dialog_delete_item_title">Hapus Item</string>
+    <string name="dialog_delete_class_message">Apakah Anda yakin ingin menghapus kelas ini?</string>
+    <string name="dialog_delete_item_message">Apakah Anda yakin ingin menghapus item ini?</string>
+
+    <!-- Bagian Halaman Ringkasan (Overview Sections) -->
+    <string name="section_assignments">Daftar Tugas</string>
+    <string name="section_exams">Daftar Ujian</string>
+    <string name="section_tasks">Daftar Pekerjaan Lain</string>
 </resources>
