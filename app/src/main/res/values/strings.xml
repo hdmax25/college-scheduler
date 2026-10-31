@@ -98,4 +98,10 @@
     <string name="section_assignments">Daftar Tugas</string>
     <string name="section_exams">Daftar Ujian</string>
     <string name="section_tasks">Daftar Pekerjaan Lain</string>
+
+    <!-- Format Tampilan & Aksesibilitas -->
+    <string name="format_section">Seksi: %1$s</string>
+    <string name="format_schedule">%1$s • %2$s - %3$s</string>
+    <string name="content_description_add_class">Tambah Kelas Baru</string>
+    <string name="btn_add_first_class">Tambah Kelas Sekarang</string>
 </resources>
