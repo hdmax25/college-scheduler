@@ -19,6 +19,7 @@
     <string name="action_sort">Urutkan</string>
     <string name="action_mark_complete">Tandai Selesai</string>
     <string name="action_mark_incomplete">Tandai Belum Selesai</string>
+    <string name="action_reset_filter">Tampilkan Semua</string>
 
     <!-- Kondisi Kosong (Empty States) -->
     <string name="empty_data_default">Belum ada data</string>
@@ -27,12 +28,15 @@
     <string name="empty_exams">Belum ada ujian yang ditambahkan</string>
     <string name="empty_overview">Belum ada tugas, ujian, atau pekerjaan</string>
     <string name="empty_filter_results">Tidak ada item yang cocok</string>
+    <string name="empty_filter_desc">Coba ubah filter untuk menampilkan item lainnya</string>
 
     <!-- Kriteria Pengurutan (Sort) -->
     <string name="sort_title">Urutkan Berdasarkan</string>
     <string name="sort_by_name">Nama</string>
     <string name="sort_by_due_date">Tenggat</string>
+    <string name="sort_by_exam_time">Waktu Ujian</string>
     <string name="sort_by_course">Mata Kuliah</string>
+    <string name="sort_chip_format">Urut: %1$s</string>
 
     <!-- Kriteria Penyaringan (Filter) -->
     <string name="filter_title">Filter Status</string>

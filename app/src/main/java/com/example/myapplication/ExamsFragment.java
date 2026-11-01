@@ -15,22 +15,34 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.myapplication.adapter.ExamAdapter;
 import com.example.myapplication.data.InMemoryRepository;
 import com.example.myapplication.model.Exam;
+import com.example.myapplication.util.ItemSorter;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
 /**
- * Fragment untuk menampilkan daftar Ujian.
- * Terhubung ke InMemoryRepository, menangani penanda selesai melalui checkbox (BR-5),
- * menampilkan lokasi ujian dan kondisi kosong (empty state), serta membuka ItemFormActivity.
+ * Fragment untuk menampilkan daftar Ujian dengan kontrol pengurutan (Sort) dan penyaringan (Filter).
+ * Sesuai panduan FE-09.
  */
 public class ExamsFragment extends Fragment {
 
     private RecyclerView recyclerView;
-    private View layoutEmptyState;
+    private View layoutEmptyExams;
+    private View layoutEmptyFilter;
     private FloatingActionButton fabAddExam;
     private View btnEmptyAddExam;
+    private View btnResetFilter;
+
+    private Chip chipSort;
+    private ChipGroup chipGroupFilter;
+
     private ExamAdapter adapter;
+
+    private ItemSorter.SortOption currentSort = ItemSorter.SortOption.DATE;
+    private ItemSorter.FilterOption currentFilter = ItemSorter.FilterOption.ALL;
 
     public ExamsFragment() {
         // Required empty public constructor
@@ -47,11 +59,17 @@ public class ExamsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         recyclerView = view.findViewById(R.id.recycler_view_exams);
-        layoutEmptyState = view.findViewById(R.id.layout_empty_exams);
+        layoutEmptyExams = view.findViewById(R.id.layout_empty_exams);
+        layoutEmptyFilter = view.findViewById(R.id.layout_empty_filter_exam);
         fabAddExam = view.findViewById(R.id.fab_add_exam);
         btnEmptyAddExam = view.findViewById(R.id.btn_empty_add_exam);
+        btnResetFilter = view.findViewById(R.id.btn_reset_filter_exam);
+
+        chipSort = view.findViewById(R.id.chip_sort_exam);
+        chipGroupFilter = view.findViewById(R.id.chip_group_filter_exam);
 
         setupRecyclerView();
+        setupSortAndFilterControls();
         setupListeners();
     }
 
@@ -63,6 +81,8 @@ public class ExamsFragment extends Fragment {
         // Menangani perubahan status selesai (checkbox) sesuai BR-5
         adapter.setOnStatusChangeListener((exam, isCompleted) -> {
             InMemoryRepository.getInstance().setExamCompleted(exam.getId(), isCompleted);
+            // Refresh tampilan agar filter aktif langsung menyesuaikan
+            loadExams();
         });
 
         // Menangani klik baris (membuka ItemFormActivity dalam mode ubah ujian)
@@ -76,9 +96,73 @@ public class ExamsFragment extends Fragment {
         });
     }
 
+    private void setupSortAndFilterControls() {
+        updateSortChipText();
+
+        chipSort.setOnClickListener(v -> showSortDialog());
+
+        chipGroupFilter.setOnCheckedStateChangeListener((group, checkedIds) -> {
+            if (checkedIds.contains(R.id.chip_filter_incomplete_exam)) {
+                currentFilter = ItemSorter.FilterOption.INCOMPLETE;
+            } else if (checkedIds.contains(R.id.chip_filter_completed_exam)) {
+                currentFilter = ItemSorter.FilterOption.COMPLETED;
+            } else {
+                currentFilter = ItemSorter.FilterOption.ALL;
+            }
+            loadExams();
+        });
+
+        btnResetFilter.setOnClickListener(v -> {
+            chipGroupFilter.check(R.id.chip_filter_all_exam);
+        });
+    }
+
+    private void showSortDialog() {
+        String[] options = new String[]{
+                getString(R.string.sort_by_name),
+                getString(R.string.sort_by_exam_time),
+                getString(R.string.sort_by_course)
+        };
+
+        int checkedItem = 1; // Default DATE (Waktu Ujian)
+        if (currentSort == ItemSorter.SortOption.NAME) {
+            checkedItem = 0;
+        } else if (currentSort == ItemSorter.SortOption.COURSE) {
+            checkedItem = 2;
+        }
+
+        new MaterialAlertDialogBuilder(requireContext())
+                .setTitle(R.string.sort_title)
+                .setSingleChoiceItems(options, checkedItem, (dialog, which) -> {
+                    if (which == 0) {
+                        currentSort = ItemSorter.SortOption.NAME;
+                    } else if (which == 1) {
+                        currentSort = ItemSorter.SortOption.DATE;
+                    } else if (which == 2) {
+                        currentSort = ItemSorter.SortOption.COURSE;
+                    }
+                    updateSortChipText();
+                    loadExams();
+                    dialog.dismiss();
+                })
+                .setNegativeButton(R.string.action_cancel, null)
+                .show();
+    }
+
+    private void updateSortChipText() {
+        String label;
+        if (currentSort == ItemSorter.SortOption.NAME) {
+            label = getString(R.string.sort_by_name);
+        } else if (currentSort == ItemSorter.SortOption.COURSE) {
+            label = getString(R.string.sort_by_course);
+        } else {
+            label = getString(R.string.sort_by_exam_time);
+        }
+        chipSort.setText(getString(R.string.sort_chip_format, label));
+    }
+
     private void setupListeners() {
         View.OnClickListener addClickListener = v -> {
-            // Membuka ItemFormActivity dalam mode tambah ujian baru
             Intent intent = ItemFormActivity.newIntent(
                     requireContext(),
                     ItemFormActivity.TYPE_EXAM,
@@ -98,18 +182,36 @@ public class ExamsFragment extends Fragment {
     }
 
     /**
-     * Memuat daftar ujian dari repository dan mengatur kondisi tampilan (daftar vs empty state).
+     * Memuat daftar ujian dari repository, menerapkan urut dan filter,
+     * serta menangani perbedaan kondisi: daftar tampil vs belum ada data vs hasil filter kosong.
      */
     public void loadExams() {
-        List<Exam> exams = InMemoryRepository.getInstance().getAllExams();
-        if (exams.isEmpty()) {
+        List<Exam> rawList = InMemoryRepository.getInstance().getAllExams();
+
+        if (rawList.isEmpty()) {
+            // Kondisi 1: Belum ada data sama sekali di repository
             recyclerView.setVisibility(View.GONE);
-            layoutEmptyState.setVisibility(View.VISIBLE);
-            adapter.setExams(exams);
+            layoutEmptyExams.setVisibility(View.VISIBLE);
+            layoutEmptyFilter.setVisibility(View.GONE);
+            adapter.setExams(rawList);
+            return;
+        }
+
+        layoutEmptyExams.setVisibility(View.GONE);
+
+        // Terapkan filter dan sort di lapisan UI
+        List<Exam> displayList = ItemSorter.filterAndSortExams(rawList, currentFilter, currentSort);
+
+        if (displayList.isEmpty()) {
+            // Kondisi 2: Ada data di repository, tetapi tidak ada yang cocok dengan filter aktif
+            recyclerView.setVisibility(View.GONE);
+            layoutEmptyFilter.setVisibility(View.VISIBLE);
+            adapter.setExams(displayList);
         } else {
+            // Kondisi 3: Ada item yang cocok ditampilkan
             recyclerView.setVisibility(View.VISIBLE);
-            layoutEmptyState.setVisibility(View.GONE);
-            adapter.setExams(exams);
+            layoutEmptyFilter.setVisibility(View.GONE);
+            adapter.setExams(displayList);
         }
     }
 }

@@ -15,22 +15,34 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.myapplication.adapter.AssignmentAdapter;
 import com.example.myapplication.data.InMemoryRepository;
 import com.example.myapplication.model.Assignment;
+import com.example.myapplication.util.ItemSorter;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
 /**
- * Fragment untuk menampilkan daftar Tugas.
- * Terhubung ke InMemoryRepository, menangani penanda selesai melalui checkbox,
- * menampilkan kondisi kosong (empty state), dan membuka ItemFormActivity untuk mode tambah & ubah.
+ * Fragment untuk menampilkan daftar Tugas dengan kontrol pengurutan (Sort) dan penyaringan (Filter).
+ * Sesuai panduan FE-09.
  */
 public class AssignmentsFragment extends Fragment {
 
     private RecyclerView recyclerView;
-    private View layoutEmptyState;
+    private View layoutEmptyAssignments;
+    private View layoutEmptyFilter;
     private FloatingActionButton fabAddAssignment;
     private View btnEmptyAddAssignment;
+    private View btnResetFilter;
+
+    private Chip chipSort;
+    private ChipGroup chipGroupFilter;
+
     private AssignmentAdapter adapter;
+
+    private ItemSorter.SortOption currentSort = ItemSorter.SortOption.DATE;
+    private ItemSorter.FilterOption currentFilter = ItemSorter.FilterOption.ALL;
 
     public AssignmentsFragment() {
         // Required empty public constructor
@@ -47,11 +59,17 @@ public class AssignmentsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         recyclerView = view.findViewById(R.id.recycler_view_assignments);
-        layoutEmptyState = view.findViewById(R.id.layout_empty_assignments);
+        layoutEmptyAssignments = view.findViewById(R.id.layout_empty_assignments);
+        layoutEmptyFilter = view.findViewById(R.id.layout_empty_filter_assignment);
         fabAddAssignment = view.findViewById(R.id.fab_add_assignment);
         btnEmptyAddAssignment = view.findViewById(R.id.btn_empty_add_assignment);
+        btnResetFilter = view.findViewById(R.id.btn_reset_filter_assignment);
+
+        chipSort = view.findViewById(R.id.chip_sort_assignment);
+        chipGroupFilter = view.findViewById(R.id.chip_group_filter_assignment);
 
         setupRecyclerView();
+        setupSortAndFilterControls();
         setupListeners();
     }
 
@@ -63,6 +81,8 @@ public class AssignmentsFragment extends Fragment {
         // Menangani perubahan status selesai (checkbox)
         adapter.setOnStatusChangeListener((assignment, isCompleted) -> {
             InMemoryRepository.getInstance().setAssignmentCompleted(assignment.getId(), isCompleted);
+            // Refresh tampilan agar filter aktif (misal filter Belum Selesai) langsung menyesuaikan
+            loadAssignments();
         });
 
         // Menangani klik baris (membuka ItemFormActivity dalam mode ubah)
@@ -76,9 +96,74 @@ public class AssignmentsFragment extends Fragment {
         });
     }
 
+    private void setupSortAndFilterControls() {
+        // Update label chip sort awal
+        updateSortChipText();
+
+        chipSort.setOnClickListener(v -> showSortDialog());
+
+        chipGroupFilter.setOnCheckedStateChangeListener((group, checkedIds) -> {
+            if (checkedIds.contains(R.id.chip_filter_incomplete_assignment)) {
+                currentFilter = ItemSorter.FilterOption.INCOMPLETE;
+            } else if (checkedIds.contains(R.id.chip_filter_completed_assignment)) {
+                currentFilter = ItemSorter.FilterOption.COMPLETED;
+            } else {
+                currentFilter = ItemSorter.FilterOption.ALL;
+            }
+            loadAssignments();
+        });
+
+        btnResetFilter.setOnClickListener(v -> {
+            chipGroupFilter.check(R.id.chip_filter_all_assignment);
+        });
+    }
+
+    private void showSortDialog() {
+        String[] options = new String[]{
+                getString(R.string.sort_by_name),
+                getString(R.string.sort_by_due_date),
+                getString(R.string.sort_by_course)
+        };
+
+        int checkedItem = 1; // Default DATE
+        if (currentSort == ItemSorter.SortOption.NAME) {
+            checkedItem = 0;
+        } else if (currentSort == ItemSorter.SortOption.COURSE) {
+            checkedItem = 2;
+        }
+
+        new MaterialAlertDialogBuilder(requireContext())
+                .setTitle(R.string.sort_title)
+                .setSingleChoiceItems(options, checkedItem, (dialog, which) -> {
+                    if (which == 0) {
+                        currentSort = ItemSorter.SortOption.NAME;
+                    } else if (which == 1) {
+                        currentSort = ItemSorter.SortOption.DATE;
+                    } else if (which == 2) {
+                        currentSort = ItemSorter.SortOption.COURSE;
+                    }
+                    updateSortChipText();
+                    loadAssignments();
+                    dialog.dismiss();
+                })
+                .setNegativeButton(R.string.action_cancel, null)
+                .show();
+    }
+
+    private void updateSortChipText() {
+        String label;
+        if (currentSort == ItemSorter.SortOption.NAME) {
+            label = getString(R.string.sort_by_name);
+        } else if (currentSort == ItemSorter.SortOption.COURSE) {
+            label = getString(R.string.sort_by_course);
+        } else {
+            label = getString(R.string.sort_by_due_date);
+        }
+        chipSort.setText(getString(R.string.sort_chip_format, label));
+    }
+
     private void setupListeners() {
         View.OnClickListener addClickListener = v -> {
-            // Membuka ItemFormActivity dalam mode tambah tugas baru
             Intent intent = ItemFormActivity.newIntent(
                     requireContext(),
                     ItemFormActivity.TYPE_ASSIGNMENT,
@@ -98,18 +183,36 @@ public class AssignmentsFragment extends Fragment {
     }
 
     /**
-     * Memuat daftar tugas dari repository dan mengatur kondisi tampilan (daftar vs empty state).
+     * Memuat daftar tugas dari repository, menerapkan urut dan filter,
+     * serta menangani perbedaan kondisi: daftar tampil vs belum ada data vs hasil filter kosong.
      */
     public void loadAssignments() {
-        List<Assignment> assignments = InMemoryRepository.getInstance().getAllAssignments();
-        if (assignments.isEmpty()) {
+        List<Assignment> rawList = InMemoryRepository.getInstance().getAllAssignments();
+
+        if (rawList.isEmpty()) {
+            // Kondisi 1: Belum ada data sama sekali di repository
             recyclerView.setVisibility(View.GONE);
-            layoutEmptyState.setVisibility(View.VISIBLE);
-            adapter.setAssignments(assignments);
+            layoutEmptyAssignments.setVisibility(View.VISIBLE);
+            layoutEmptyFilter.setVisibility(View.GONE);
+            adapter.setAssignments(rawList);
+            return;
+        }
+
+        layoutEmptyAssignments.setVisibility(View.GONE);
+
+        // Terapkan filter dan sort di lapisan UI
+        List<Assignment> displayList = ItemSorter.filterAndSortAssignments(rawList, currentFilter, currentSort);
+
+        if (displayList.isEmpty()) {
+            // Kondisi 2: Ada data di repository, tetapi tidak ada yang cocok dengan filter aktif
+            recyclerView.setVisibility(View.GONE);
+            layoutEmptyFilter.setVisibility(View.VISIBLE);
+            adapter.setAssignments(displayList);
         } else {
+            // Kondisi 3: Ada item yang cocok ditampilkan
             recyclerView.setVisibility(View.VISIBLE);
-            layoutEmptyState.setVisibility(View.GONE);
-            adapter.setAssignments(assignments);
+            layoutEmptyFilter.setVisibility(View.GONE);
+            adapter.setAssignments(displayList);
         }
     }
 }

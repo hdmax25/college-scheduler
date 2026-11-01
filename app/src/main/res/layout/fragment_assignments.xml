@@ -18,11 +18,72 @@
             android:paddingStart="@dimen/spacing_medium"
             android:paddingTop="@dimen/spacing_medium"
             android:paddingEnd="@dimen/spacing_medium"
-            android:paddingBottom="@dimen/spacing_small"
+            android:paddingBottom="@dimen/spacing_tiny"
             android:text="@string/title_assignments"
             android:textColor="?attr/colorOnBackground"
             android:textSize="@dimen/text_size_headline"
             android:textStyle="bold" />
+
+        <!-- Baris Kontrol Sort & Filter -->
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:paddingStart="@dimen/spacing_medium"
+            android:paddingEnd="@dimen/spacing_medium"
+            android:paddingBottom="@dimen/spacing_small"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <!-- Chip Pilihan Urut -->
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_sort_assignment"
+                    style="@style/Widget.Material3.Chip.Assist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/spacing_small"
+                    android:text="@string/sort_by_due_date"
+                    app:chipIcon="@drawable/ic_sort" />
+
+                <!-- Group Chip Pilihan Filter Status -->
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chip_group_filter_assignment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:selectionRequired="true"
+                    app:singleSelection="true">
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_filter_all_assignment"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:text="@string/filter_all" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_filter_incomplete_assignment"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/filter_incomplete" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_filter_completed_assignment"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/filter_completed" />
+
+                </com.google.android.material.chip.ChipGroup>
+
+            </LinearLayout>
+        </HorizontalScrollView>
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -38,7 +99,7 @@
                 android:paddingBottom="88dp"
                 tools:listitem="@layout/item_assignment" />
 
-            <!-- Tampilan Kondisi Kosong (Empty State) -->
+            <!-- Kondisi Data Kosong (Belum ada data sama sekali) -->
             <LinearLayout
                 android:id="@+id/layout_empty_assignments"
                 android:layout_width="match_parent"
@@ -73,6 +134,53 @@
                     android:layout_marginTop="@dimen/spacing_medium"
                     android:text="@string/btn_add_first_assignment"
                     app:icon="@drawable/ic_add" />
+            </LinearLayout>
+
+            <!-- Kondisi Hasil Filter Kosong (Ada data tapi filter tidak cocok) -->
+            <LinearLayout
+                android:id="@+id/layout_empty_filter_assignment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_xlarge"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_filter"
+                    app:tint="?attr/colorOutline" />
+
+                <TextView
+                    android:id="@+id/text_empty_filter_title_assignment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_medium"
+                    android:gravity="center"
+                    android:text="@string/empty_filter_results"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="@dimen/text_size_subtitle"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/text_empty_filter_desc_assignment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_tiny"
+                    android:gravity="center"
+                    android:text="@string/empty_filter_desc"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textSize="@dimen/text_size_body" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_reset_filter_assignment"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_small"
+                    android:text="@string/action_reset_filter" />
             </LinearLayout>
 
         </FrameLayout>
