@@ -21,13 +21,18 @@ import java.util.List;
 
 /**
  * Adapter RecyclerView untuk menampilkan daftar Tugas.
- * Menangani penanda selesai (checkbox) dengan efek coret dan pemudaran kartu.
- * Sesuai panduan FE-06.
+ * Menangani penanda selesai (checkbox) dengan efek coret dan pemudaran kartu,
+ * serta klik baris dan tekan lama untuk aksi hapus (BR-2).
+ * Sesuai panduan FE-06 dan FE-10.
  */
 public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.AssignmentViewHolder> {
 
     public interface OnItemClickListener {
         void onItemClick(Assignment assignment);
+    }
+
+    public interface OnItemLongClickListener {
+        void onItemLongClick(Assignment assignment);
     }
 
     public interface OnStatusChangeListener {
@@ -36,6 +41,7 @@ public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.As
 
     private final List<Assignment> assignments = new ArrayList<>();
     private OnItemClickListener itemClickListener;
+    private OnItemLongClickListener longClickListener;
     private OnStatusChangeListener statusChangeListener;
 
     public AssignmentAdapter() {
@@ -49,6 +55,10 @@ public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.As
 
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.itemClickListener = listener;
+    }
+
+    public void setOnItemLongClickListener(OnItemLongClickListener listener) {
+        this.longClickListener = listener;
     }
 
     public void setOnStatusChangeListener(OnStatusChangeListener listener) {
@@ -73,7 +83,7 @@ public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.As
     @Override
     public void onBindViewHolder(@NonNull AssignmentViewHolder holder, int position) {
         Assignment item = assignments.get(position);
-        holder.bind(item, itemClickListener, statusChangeListener);
+        holder.bind(item, itemClickListener, longClickListener, statusChangeListener);
     }
 
     @Override
@@ -97,7 +107,10 @@ public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.As
             textAssignmentDueDate = itemView.findViewById(R.id.text_assignment_due_date);
         }
 
-        void bind(Assignment item, OnItemClickListener clickListener, OnStatusChangeListener statusListener) {
+        void bind(Assignment item,
+                  OnItemClickListener clickListener,
+                  OnItemLongClickListener longListener,
+                  OnStatusChangeListener statusListener) {
             Context context = itemView.getContext();
             textAssignmentName.setText(item.getName());
             textAssignmentCourse.setText(item.getCourse());
@@ -126,6 +139,14 @@ public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.As
                     clickListener.onItemClick(item);
                 }
             });
+
+            itemView.setOnLongClickListener(v -> {
+                if (longListener != null) {
+                    longListener.onItemLongClick(item);
+                    return true;
+                }
+                return false;
+            });
         }
 
         private void applyCompletionStyle(boolean isCompleted) {
@@ -141,4 +162,3 @@ public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.As
         }
     }
 }
-

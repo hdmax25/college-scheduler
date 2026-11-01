@@ -16,6 +16,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.myapplication.data.InMemoryRepository;
 import com.example.myapplication.model.CourseClass;
+import com.example.myapplication.util.ConfirmDialog;
 import com.example.myapplication.util.ValidationUtils;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
@@ -33,6 +34,7 @@ import java.util.Locale;
 /**
  * Activity Form untuk menambah atau mengubah data Kelas.
  * Memvalidasi input wajib dan urutan waktu sebelum menyimpan ke InMemoryRepository.
+ * Mendukung hapus dengan dialog konfirmasi pada mode ubah (FE-10).
  */
 public class ClassFormActivity extends AppCompatActivity {
 
@@ -121,6 +123,7 @@ public class ClassFormActivity extends AppCompatActivity {
             if (existingClass != null) {
                 isEditMode = true;
                 toolbar.setTitle(R.string.form_class_title_edit);
+                toolbar.inflateMenu(R.menu.menu_form);
                 populateExistingData();
                 return;
             }
@@ -144,6 +147,21 @@ public class ClassFormActivity extends AppCompatActivity {
     private void setupListeners() {
         toolbar.setNavigationOnClickListener(v -> finish());
         btnCancel.setOnClickListener(v -> finish());
+
+        // Menu hapus di toolbar (hanya aktif saat mode ubah)
+        toolbar.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.action_delete_form) {
+                if (existingClass != null) {
+                    ConfirmDialog.showDeleteClass(this, existingClass.getName(), () -> {
+                        InMemoryRepository.getInstance().deleteClass(classId);
+                        Toast.makeText(this, R.string.msg_class_deleted, Toast.LENGTH_SHORT).show();
+                        finish();
+                    });
+                }
+                return true;
+            }
+            return false;
+        });
 
         // Pemilih Hari Kuliah
         View.OnClickListener dayPickerListener = v -> showDaysPickerDialog();
@@ -338,4 +356,3 @@ public class ClassFormActivity extends AppCompatActivity {
         }
     }
 }
-

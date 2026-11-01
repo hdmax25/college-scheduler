@@ -17,7 +17,7 @@ import java.util.List;
 
 /**
  * Adapter RecyclerView untuk menampilkan daftar Kelas.
- * Sesuai panduan FE-04.
+ * Sesuai panduan FE-04 dan FE-10.
  */
 public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ClassViewHolder> {
 
@@ -25,8 +25,13 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ClassViewHol
         void onItemClick(CourseClass courseClass);
     }
 
+    public interface OnItemLongClickListener {
+        void onItemLongClick(CourseClass courseClass);
+    }
+
     private final List<CourseClass> classes = new ArrayList<>();
-    private OnItemClickListener listener;
+    private OnItemClickListener clickListener;
+    private OnItemLongClickListener longClickListener;
 
     public ClassAdapter() {
     }
@@ -38,7 +43,11 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ClassViewHol
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
-        this.listener = listener;
+        this.clickListener = listener;
+    }
+
+    public void setOnItemLongClickListener(OnItemLongClickListener listener) {
+        this.longClickListener = listener;
     }
 
     public void setClasses(List<CourseClass> newClasses) {
@@ -59,7 +68,7 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ClassViewHol
     @Override
     public void onBindViewHolder(@NonNull ClassViewHolder holder, int position) {
         CourseClass item = classes.get(position);
-        holder.bind(item, listener);
+        holder.bind(item, clickListener, longClickListener);
     }
 
     @Override
@@ -87,7 +96,7 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ClassViewHol
             layoutClassProfessor = itemView.findViewById(R.id.layout_class_professor);
         }
 
-        void bind(CourseClass item, OnItemClickListener listener) {
+        void bind(CourseClass item, OnItemClickListener clickListener, OnItemLongClickListener longClickListener) {
             Context context = itemView.getContext();
             textClassName.setText(item.getName());
 
@@ -131,11 +140,18 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ClassViewHol
             }
 
             itemView.setOnClickListener(v -> {
-                if (listener != null) {
-                    listener.onItemClick(item);
+                if (clickListener != null) {
+                    clickListener.onItemClick(item);
                 }
+            });
+
+            itemView.setOnLongClickListener(v -> {
+                if (longClickListener != null) {
+                    longClickListener.onItemLongClick(item);
+                    return true;
+                }
+                return false;
             });
         }
     }
 }
-

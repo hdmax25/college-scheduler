@@ -21,13 +21,18 @@ import java.util.List;
 
 /**
  * Adapter RecyclerView untuk menampilkan daftar Ujian.
- * Menangani waktu ujian, lokasi ujian, dan penanda selesai (checkbox) sesuai BR-5.
- * Sesuai panduan FE-08.
+ * Menangani waktu ujian, lokasi ujian, penanda selesai (checkbox) sesuai BR-5,
+ * serta klik baris dan tekan lama untuk aksi hapus (BR-2).
+ * Sesuai panduan FE-08 dan FE-10.
  */
 public class ExamAdapter extends RecyclerView.Adapter<ExamAdapter.ExamViewHolder> {
 
     public interface OnItemClickListener {
         void onItemClick(Exam exam);
+    }
+
+    public interface OnItemLongClickListener {
+        void onItemLongClick(Exam exam);
     }
 
     public interface OnStatusChangeListener {
@@ -36,6 +41,7 @@ public class ExamAdapter extends RecyclerView.Adapter<ExamAdapter.ExamViewHolder
 
     private final List<Exam> exams = new ArrayList<>();
     private OnItemClickListener itemClickListener;
+    private OnItemLongClickListener longClickListener;
     private OnStatusChangeListener statusChangeListener;
 
     public ExamAdapter() {
@@ -49,6 +55,10 @@ public class ExamAdapter extends RecyclerView.Adapter<ExamAdapter.ExamViewHolder
 
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.itemClickListener = listener;
+    }
+
+    public void setOnItemLongClickListener(OnItemLongClickListener listener) {
+        this.longClickListener = listener;
     }
 
     public void setOnStatusChangeListener(OnStatusChangeListener listener) {
@@ -73,7 +83,7 @@ public class ExamAdapter extends RecyclerView.Adapter<ExamAdapter.ExamViewHolder
     @Override
     public void onBindViewHolder(@NonNull ExamViewHolder holder, int position) {
         Exam item = exams.get(position);
-        holder.bind(item, itemClickListener, statusChangeListener);
+        holder.bind(item, itemClickListener, longClickListener, statusChangeListener);
     }
 
     @Override
@@ -101,7 +111,10 @@ public class ExamAdapter extends RecyclerView.Adapter<ExamAdapter.ExamViewHolder
             layoutExamLocation = itemView.findViewById(R.id.layout_exam_location);
         }
 
-        void bind(Exam item, OnItemClickListener clickListener, OnStatusChangeListener statusListener) {
+        void bind(Exam item,
+                  OnItemClickListener clickListener,
+                  OnItemLongClickListener longListener,
+                  OnStatusChangeListener statusListener) {
             Context context = itemView.getContext();
             textExamName.setText(item.getName());
             textExamCourse.setText(item.getCourse());
@@ -138,6 +151,14 @@ public class ExamAdapter extends RecyclerView.Adapter<ExamAdapter.ExamViewHolder
                     clickListener.onItemClick(item);
                 }
             });
+
+            itemView.setOnLongClickListener(v -> {
+                if (longListener != null) {
+                    longListener.onItemLongClick(item);
+                    return true;
+                }
+                return false;
+            });
         }
 
         private void applyCompletionStyle(boolean isCompleted) {
@@ -151,4 +172,3 @@ public class ExamAdapter extends RecyclerView.Adapter<ExamAdapter.ExamViewHolder
         }
     }
 }
-

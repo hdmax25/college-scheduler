@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.myapplication.adapter.ExamAdapter;
 import com.example.myapplication.data.InMemoryRepository;
 import com.example.myapplication.model.Exam;
+import com.example.myapplication.util.ConfirmDialog;
 import com.example.myapplication.util.ItemSorter;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -25,7 +27,7 @@ import java.util.List;
 
 /**
  * Fragment untuk menampilkan daftar Ujian dengan kontrol pengurutan (Sort) dan penyaringan (Filter).
- * Sesuai panduan FE-09.
+ * Sesuai panduan FE-08, FE-09, dan FE-10.
  */
 public class ExamsFragment extends Fragment {
 
@@ -93,6 +95,15 @@ public class ExamsFragment extends Fragment {
                     exam.getId()
             );
             startActivity(intent);
+        });
+
+        // Menangani tekan lama baris untuk konfirmasi hapus sesuai BR-2
+        adapter.setOnItemLongClickListener(exam -> {
+            ConfirmDialog.showDeleteItem(requireContext(), exam.getName(), () -> {
+                InMemoryRepository.getInstance().deleteExam(exam.getId());
+                Toast.makeText(requireContext(), R.string.msg_exam_deleted, Toast.LENGTH_SHORT).show();
+                loadExams();
+            });
         });
     }
 
@@ -188,29 +199,28 @@ public class ExamsFragment extends Fragment {
     public void loadExams() {
         List<Exam> rawList = InMemoryRepository.getInstance().getAllExams();
 
+        // 1. Jika belum ada ujian sama sekali (data kosong)
         if (rawList.isEmpty()) {
-            // Kondisi 1: Belum ada data sama sekali di repository
             recyclerView.setVisibility(View.GONE);
-            layoutEmptyExams.setVisibility(View.VISIBLE);
             layoutEmptyFilter.setVisibility(View.GONE);
+            layoutEmptyExams.setVisibility(View.VISIBLE);
             adapter.setExams(rawList);
             return;
         }
 
         layoutEmptyExams.setVisibility(View.GONE);
 
-        // Terapkan filter dan sort di lapisan UI
+        // 2. Terapkan filter dan sort
         List<Exam> displayList = ItemSorter.filterAndSortExams(rawList, currentFilter, currentSort);
 
+        // 3. Periksa apakah hasil filter kosong padahal data ada
         if (displayList.isEmpty()) {
-            // Kondisi 2: Ada data di repository, tetapi tidak ada yang cocok dengan filter aktif
             recyclerView.setVisibility(View.GONE);
             layoutEmptyFilter.setVisibility(View.VISIBLE);
             adapter.setExams(displayList);
         } else {
-            // Kondisi 3: Ada item yang cocok ditampilkan
-            recyclerView.setVisibility(View.VISIBLE);
             layoutEmptyFilter.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
             adapter.setExams(displayList);
         }
     }

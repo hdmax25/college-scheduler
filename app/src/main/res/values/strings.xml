@@ -107,7 +107,11 @@
     <string name="dialog_delete_class_title">Hapus Kelas</string>
     <string name="dialog_delete_item_title">Hapus Item</string>
     <string name="dialog_delete_class_message">Apakah Anda yakin ingin menghapus kelas ini?</string>
+    <string name="dialog_delete_class_message_formatted">Apakah Anda yakin ingin menghapus kelas \"%1$s\"?</string>
     <string name="dialog_delete_item_message">Apakah Anda yakin ingin menghapus item ini?</string>
+    <string name="dialog_delete_item_message_formatted">Apakah Anda yakin ingin menghapus \"%1$s\"?</string>
+    <string name="dialog_confirm_delete">Hapus</string>
+    <string name="dialog_cancel">Batal</string>
 
     <!-- Bagian Halaman Ringkasan (Overview Sections) -->
     <string name="section_assignments">Daftar Tugas</string>
@@ -128,13 +132,19 @@
 
     <string name="msg_class_added">Kelas berhasil ditambahkan</string>
     <string name="msg_class_updated">Kelas berhasil diperbarui</string>
+    <string name="msg_class_deleted">Kelas berhasil dihapus</string>
 
     <string name="msg_assignment_added">Tugas berhasil ditambahkan</string>
     <string name="msg_assignment_updated">Tugas berhasil diperbarui</string>
+    <string name="msg_assignment_deleted">Tugas berhasil dihapus</string>
+
     <string name="msg_exam_added">Ujian berhasil ditambahkan</string>
     <string name="msg_exam_updated">Ujian berhasil diperbarui</string>
+    <string name="msg_exam_deleted">Ujian berhasil dihapus</string>
+
     <string name="msg_task_added">Pekerjaan berhasil ditambahkan</string>
     <string name="msg_task_updated">Pekerjaan berhasil diperbarui</string>
+    <string name="msg_task_deleted">Pekerjaan berhasil dihapus</string>
 
     <string name="content_description_add_assignment">Tambah Tugas Baru</string>
     <string name="btn_add_first_assignment">Tambah Tugas Sekarang</string>
@@ -145,4 +155,5 @@
     <string name="btn_add_first_exam">Tambah Ujian Sekarang</string>
     <string name="content_description_check_exam">Tandai status selesai ujian</string>
     <string name="status_exam_time">Waktu: %1$s</string>
+    <string name="content_description_delete">Hapus</string>
 </resources>

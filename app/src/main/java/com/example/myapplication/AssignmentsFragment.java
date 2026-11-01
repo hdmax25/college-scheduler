@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.myapplication.adapter.AssignmentAdapter;
 import com.example.myapplication.data.InMemoryRepository;
 import com.example.myapplication.model.Assignment;
+import com.example.myapplication.util.ConfirmDialog;
 import com.example.myapplication.util.ItemSorter;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -24,8 +26,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.List;
 
 /**
- * Fragment untuk menampilkan daftar Tugas dengan kontrol pengurutan (Sort) dan penyaringan (Filter).
- * Sesuai panduan FE-09.
+ * Fragment untuk menampilkan daftar Tugas dengan kontrol pengurutan (Sort), penyaringan (Filter),
+ * dan penghapusan dengan dialog konfirmasi (BR-2).
+ * Sesuai panduan FE-06, FE-09, dan FE-10.
  */
 public class AssignmentsFragment extends Fragment {
 
@@ -81,7 +84,6 @@ public class AssignmentsFragment extends Fragment {
         // Menangani perubahan status selesai (checkbox)
         adapter.setOnStatusChangeListener((assignment, isCompleted) -> {
             InMemoryRepository.getInstance().setAssignmentCompleted(assignment.getId(), isCompleted);
-            // Refresh tampilan agar filter aktif (misal filter Belum Selesai) langsung menyesuaikan
             loadAssignments();
         });
 
@@ -94,10 +96,18 @@ public class AssignmentsFragment extends Fragment {
             );
             startActivity(intent);
         });
+
+        // Mode Hapus: tekan lama memunculkan dialog konfirmasi (BR-2)
+        adapter.setOnItemLongClickListener(assignment -> {
+            ConfirmDialog.showDeleteItem(requireContext(), assignment.getName(), () -> {
+                InMemoryRepository.getInstance().deleteAssignment(assignment.getId());
+                Toast.makeText(requireContext(), R.string.msg_assignment_deleted, Toast.LENGTH_SHORT).show();
+                loadAssignments();
+            });
+        });
     }
 
     private void setupSortAndFilterControls() {
-        // Update label chip sort awal
         updateSortChipText();
 
         chipSort.setOnClickListener(v -> showSortDialog());

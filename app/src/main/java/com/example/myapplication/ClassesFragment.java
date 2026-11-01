@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.myapplication.adapter.ClassAdapter;
 import com.example.myapplication.data.InMemoryRepository;
 import com.example.myapplication.model.CourseClass;
+import com.example.myapplication.util.ConfirmDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
@@ -22,7 +24,7 @@ import java.util.List;
 /**
  * Fragment untuk menampilkan daftar Kelas.
  * Terhubung ke InMemoryRepository untuk membaca data Kelas, menampilkan kondisi kosong (empty state),
- * dan membuka ClassFormActivity untuk mode tambah serta ubah.
+ * membuka ClassFormActivity untuk mode tambah serta ubah, dan menangani hapus dengan konfirmasi (BR-2).
  */
 public class ClassesFragment extends Fragment {
 
@@ -60,10 +62,19 @@ public class ClassesFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         recyclerView.setAdapter(adapter);
 
+        // Mode Ubah: buka form dengan menyertakan ID kelas yang dipilih
         adapter.setOnItemClickListener(courseClass -> {
-            // Mode Ubah: buka form dengan menyertakan ID kelas yang dipilih
             Intent intent = ClassFormActivity.newIntent(requireContext(), courseClass.getId());
             startActivity(intent);
+        });
+
+        // Mode Hapus: tekan lama memunculkan dialog konfirmasi (BR-2)
+        adapter.setOnItemLongClickListener(courseClass -> {
+            ConfirmDialog.showDeleteClass(requireContext(), courseClass.getName(), () -> {
+                InMemoryRepository.getInstance().deleteClass(courseClass.getId());
+                Toast.makeText(requireContext(), R.string.msg_class_deleted, Toast.LENGTH_SHORT).show();
+                loadClasses();
+            });
         });
     }
 

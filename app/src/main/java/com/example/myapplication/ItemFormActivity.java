@@ -20,6 +20,7 @@ import com.example.myapplication.model.Assignment;
 import com.example.myapplication.model.CourseClass;
 import com.example.myapplication.model.Exam;
 import com.example.myapplication.model.WorkTask;
+import com.example.myapplication.util.ConfirmDialog;
 import com.example.myapplication.util.ValidationUtils;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
@@ -41,7 +42,7 @@ import java.util.TimeZone;
 
 /**
  * Satu Activity form untuk tiga jenis item: Tugas (Assignment), Ujian (Exam), dan Pekerjaan (WorkTask).
- * Sesuai panduan FE-07.
+ * Sesuai panduan FE-07 dan FE-10 (Hapus dengan dialog konfirmasi).
  */
 public class ItemFormActivity extends AppCompatActivity {
 
@@ -139,6 +140,7 @@ public class ItemFormActivity extends AppCompatActivity {
         isEditMode = (itemId != -1);
 
         if (isEditMode) {
+            toolbar.inflateMenu(R.menu.menu_form);
             loadExistingData();
         } else {
             setupAddModeTitle();
@@ -216,6 +218,15 @@ public class ItemFormActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(v -> finish());
         btnCancel.setOnClickListener(v -> finish());
 
+        // Menu hapus di toolbar (hanya aktif saat mode ubah)
+        toolbar.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.action_delete_form) {
+                showDeleteConfirmation();
+                return true;
+            }
+            return false;
+        });
+
         // Pemilih Tanggal
         View.OnClickListener datePickerListener = v -> showDatePicker();
         editItemDate.setOnClickListener(datePickerListener);
@@ -242,6 +253,36 @@ public class ItemFormActivity extends AppCompatActivity {
         });
 
         btnSave.setOnClickListener(v -> validateAndSave());
+    }
+
+    private void showDeleteConfirmation() {
+        String itemName = "";
+        if (TYPE_EXAM.equals(itemType) && existingExam != null) {
+            itemName = existingExam.getName();
+        } else if (TYPE_TASK.equals(itemType) && existingTask != null) {
+            itemName = existingTask.getName();
+        } else if (existingAssignment != null) {
+            itemName = existingAssignment.getName();
+        } else if (editItemName.getText() != null) {
+            itemName = editItemName.getText().toString().trim();
+        }
+
+        ConfirmDialog.showDeleteItem(this, itemName, () -> {
+            InMemoryRepository repo = InMemoryRepository.getInstance();
+            int toastResId;
+            if (TYPE_EXAM.equals(itemType)) {
+                repo.deleteExam(itemId);
+                toastResId = R.string.msg_exam_deleted;
+            } else if (TYPE_TASK.equals(itemType)) {
+                repo.deleteTask(itemId);
+                toastResId = R.string.msg_task_deleted;
+            } else {
+                repo.deleteAssignment(itemId);
+                toastResId = R.string.msg_assignment_deleted;
+            }
+            Toast.makeText(this, toastResId, Toast.LENGTH_SHORT).show();
+            finish();
+        });
     }
 
     private void showDatePicker() {
@@ -406,4 +447,3 @@ public class ItemFormActivity extends AppCompatActivity {
         }
     }
 }
-
