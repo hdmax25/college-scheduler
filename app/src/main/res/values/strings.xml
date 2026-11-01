@@ -136,4 +136,9 @@
     <string name="btn_add_first_assignment">Tambah Tugas Sekarang</string>
     <string name="content_description_check_assignment">Tandai status selesai tugas</string>
     <string name="status_assignment_due">Tenggat: %1$s</string>
+
+    <string name="content_description_add_exam">Tambah Ujian Baru</string>
+    <string name="btn_add_first_exam">Tambah Ujian Sekarang</string>
+    <string name="content_description_check_exam">Tandai status selesai ujian</string>
+    <string name="status_exam_time">Waktu: %1$s</string>
 </resources>
