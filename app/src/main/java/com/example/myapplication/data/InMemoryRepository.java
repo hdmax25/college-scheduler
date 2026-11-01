@@ -3,6 +3,7 @@ package com.example.myapplication.data;
 import com.example.myapplication.model.Assignment;
 import com.example.myapplication.model.CourseClass;
 import com.example.myapplication.model.Exam;
+import com.example.myapplication.model.OverviewItem;
 import com.example.myapplication.model.WorkTask;
 
 import java.util.ArrayList;
@@ -218,6 +219,29 @@ public class InMemoryRepository {
             return true;
         }
         return false;
+    }
+
+    // ==========================================
+    // ==========================================
+    // METODE GABUNGAN RINGKASAN (OverviewItem)
+    // ==========================================
+
+    /**
+     * Mengambil daftar gabungan dari Tugas (Assignment), Ujian (Exam), dan Pekerjaan (WorkTask).
+     * Sesuai panduan FE-11 (FR-5).
+     */
+    public synchronized List<OverviewItem> getAllOverviewItems() {
+        List<OverviewItem> list = new ArrayList<>();
+        for (Assignment a : assignmentList) {
+            list.add(OverviewItem.fromAssignment(a));
+        }
+        for (Exam e : examList) {
+            list.add(OverviewItem.fromExam(e));
+        }
+        for (WorkTask t : taskList) {
+            list.add(OverviewItem.fromTask(t));
+        }
+        return list;
     }
 
     // ==========================================

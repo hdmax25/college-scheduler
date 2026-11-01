@@ -2,6 +2,7 @@ package com.example.myapplication.util;
 
 import com.example.myapplication.model.Assignment;
 import com.example.myapplication.model.Exam;
+import com.example.myapplication.model.OverviewItem;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,8 +10,8 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * Utilitas untuk mengurutkan (sorting) dan menyaring (filtering) daftar item (Tugas & Ujian).
- * Dilakukan di lapisan tampilan sesuai panduan FE-09.
+ * Utilitas untuk mengurutkan (sorting) dan menyaring (filtering) daftar item (Tugas, Ujian, Ringkasan).
+ * Dilakukan di lapisan tampilan sesuai panduan FE-09 dan FE-11.
  */
 public class ItemSorter {
 
@@ -95,6 +96,30 @@ public class ItemSorter {
     }
 
     // ==========================================
+    // OPERASI UNTUK RINGKASAN (OverviewItem)
+    // ==========================================
+
+    /**
+     * Mengurutkan daftar gabungan Ringkasan menurut tenggat terdekat (default).
+     * Jika tanggal sama atau kosong, diurutkan menurut nama (alfabetis).
+     */
+    public static List<OverviewItem> sortOverviewItems(List<OverviewItem> source) {
+        if (source == null) {
+            return new ArrayList<>();
+        }
+
+        List<OverviewItem> sorted = new ArrayList<>(source);
+        Collections.sort(sorted, (a, b) -> {
+            int dateComp = safeCompare(a.getDateTime(), b.getDateTime());
+            if (dateComp != 0) {
+                return dateComp;
+            }
+            return safeCompare(a.getName(), b.getName());
+        });
+        return sorted;
+    }
+
+    // ==========================================
     // HELPER
     // ==========================================
 
@@ -114,4 +139,3 @@ public class ItemSorter {
         return s1.compareToIgnoreCase(s2);
     }
 }
-

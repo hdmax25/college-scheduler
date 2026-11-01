@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_overview"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/spacing_medium"
+    android:layout_marginTop="@dimen/spacing_small"
+    android:layout_marginEnd="@dimen/spacing_medium"
+    android:layout_marginBottom="@dimen/spacing_small"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground"
+    app:cardCornerRadius="@dimen/card_corner_radius"
+    app:cardElevation="@dimen/card_elevation"
+    app:strokeColor="?attr/colorOutline"
+    app:strokeWidth="1dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="@dimen/spacing_medium">
+
+        <!-- Checkbox Penanda Selesai -->
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/check_overview_completed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/content_description_check_overview" />
+
+        <!-- Detail Item Ringkasan -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_small"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <!-- Baris Badge Jenis (Tugas / Ujian / Pekerjaan) -->
+            <TextView
+                android:id="@+id/text_overview_type_badge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_badge_pill"
+                android:paddingStart="@dimen/spacing_small"
+                android:paddingTop="2dp"
+                android:paddingEnd="@dimen/spacing_small"
+                android:paddingBottom="2dp"
+                android:textSize="@dimen/text_size_caption"
+                android:textStyle="bold"
+                tools:text="TUGAS" />
+
+            <!-- Nama Item -->
+            <TextView
+                android:id="@+id/text_overview_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_tiny"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="@dimen/text_size_title"
+                android:textStyle="bold"
+                tools:text="Implementasi Bottom Navigation" />
+
+            <!-- Mata Kuliah -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_tiny"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="@dimen/icon_size_small"
+                    android:layout_height="@dimen/icon_size_small"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_nav_classes"
+                    app:tint="?attr/colorPrimary" />
+
+                <TextView
+                    android:id="@+id/text_overview_course"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/spacing_tiny"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textSize="@dimen/text_size_body"
+                    tools:text="Pemrograman Bergerak" />
+            </LinearLayout>
+
+            <!-- Tenggat / Waktu Pelaksanaan -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_tiny"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="@dimen/icon_size_small"
+                    android:layout_height="@dimen/icon_size_small"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_schedule"
+                    app:tint="?attr/colorSecondary" />
+
+                <TextView
+                    android:id="@+id/text_overview_datetime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/spacing_tiny"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textSize="@dimen/text_size_body"
+                    tools:text="Tenggat: Kamis, 5 Nov 2026, 23.59 WIB" />
+            </LinearLayout>
+
+            <!-- Lokasi (Khusus Ujian jika ada) -->
+            <LinearLayout
+                android:id="@+id/layout_overview_location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_tiny"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <ImageView
+                    android:layout_width="@dimen/icon_size_small"
+                    android:layout_height="@dimen/icon_size_small"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_location"
+                    app:tint="?attr/colorTertiary" />
+
+                <TextView
+                    android:id="@+id/text_overview_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/spacing_tiny"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textSize="@dimen/text_size_body"
+                    tools:text="Lab Komputer 2" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>
+

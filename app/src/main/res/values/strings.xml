@@ -156,4 +156,10 @@
     <string name="content_description_check_exam">Tandai status selesai ujian</string>
     <string name="status_exam_time">Waktu: %1$s</string>
     <string name="content_description_delete">Hapus</string>
+
+    <!-- Ringkasan (Overview Screen) -->
+    <string name="dialog_choose_item_type_title">Pilih Jenis Item</string>
+    <string name="content_description_add_overview">Tambah Item Baru</string>
+    <string name="btn_add_first_overview">Tambah Item Sekarang</string>
+    <string name="content_description_check_overview">Tandai status selesai item</string>
 </resources>
