@@ -40,9 +40,9 @@ public class ClassFormActivity extends AppCompatActivity {
 
     public static final String EXTRA_CLASS_ID = "extra_class_id";
 
-    private final String[] allDays = new String[]{
-            "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"
-    };
+    private String[] allDays;
+
+
 
     private TextInputLayout layoutClassName;
     private TextInputLayout layoutClassDays;
@@ -92,6 +92,7 @@ public class ClassFormActivity extends AppCompatActivity {
     }
 
     private void initViews() {
+        allDays = getResources().getStringArray(R.array.days_of_week);
         toolbar = findViewById(R.id.toolbar_class_form);
         layoutClassName = findViewById(R.id.layout_class_name);
         layoutClassDays = findViewById(R.id.layout_class_days);

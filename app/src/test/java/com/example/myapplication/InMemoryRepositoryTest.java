@@ -4,6 +4,7 @@ import com.example.myapplication.data.InMemoryRepository;
 import com.example.myapplication.model.Assignment;
 import com.example.myapplication.model.CourseClass;
 import com.example.myapplication.model.Exam;
+import com.example.myapplication.model.OverviewItem;
 import com.example.myapplication.model.WorkTask;
 
 import org.junit.Before;
@@ -127,5 +128,10 @@ public class InMemoryRepositoryTest {
         assertTrue(deleted);
         assertEquals(4, repository.getAllTasks().size());
     }
-}
 
+    @Test
+    public void testGetAllOverviewItems() {
+        List<OverviewItem> overviewItems = repository.getAllOverviewItems();
+        assertEquals(12, overviewItems.size()); // 4 assignments + 4 exams + 4 tasks
+    }
+}

@@ -2,6 +2,7 @@ package com.example.myapplication;
 
 import com.example.myapplication.model.Assignment;
 import com.example.myapplication.model.Exam;
+import com.example.myapplication.model.OverviewItem;
 import com.example.myapplication.util.ItemSorter;
 
 import org.junit.Before;
@@ -124,6 +125,20 @@ public class ItemSorterTest {
                 ItemSorter.SortOption.DATE
         );
         assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void testSortOverviewItems() {
+        List<OverviewItem> list = new ArrayList<>();
+        list.add(new OverviewItem(OverviewItem.Type.ASSIGNMENT, 1, "Tugas B", "2026-11-20 23:59", "Matkul", false, null));
+        list.add(new OverviewItem(OverviewItem.Type.EXAM, 2, "Ujian A", "2026-11-05 08:00", "Matkul", false, "R1"));
+        list.add(new OverviewItem(OverviewItem.Type.TASK, 3, "Pekerjaan C", "2026-11-10 15:00", "Matkul", false, null));
+
+        List<OverviewItem> sorted = ItemSorter.sortOverviewItems(list);
+        assertEquals(3, sorted.size());
+        assertEquals("Ujian A", sorted.get(0).getName());
+        assertEquals("Pekerjaan C", sorted.get(1).getName());
+        assertEquals("Tugas B", sorted.get(2).getName());
     }
 }
 

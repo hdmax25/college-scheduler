@@ -162,4 +162,15 @@
     <string name="content_description_add_overview">Tambah Item Baru</string>
     <string name="btn_add_first_overview">Tambah Item Sekarang</string>
     <string name="content_description_check_overview">Tandai status selesai item</string>
+
+    <!-- Hari Kuliah (dipakai di dialog pilih hari) -->
+    <string-array name="days_of_week">
+        <item>Senin</item>
+        <item>Selasa</item>
+        <item>Rabu</item>
+        <item>Kamis</item>
+        <item>Jumat</item>
+        <item>Sabtu</item>
+        <item>Minggu</item>
+    </string-array>
 </resources>
