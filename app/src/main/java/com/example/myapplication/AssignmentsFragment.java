@@ -1,10 +1,10 @@
 package com.example.myapplication;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * Fragment untuk menampilkan daftar Tugas.
  * Terhubung ke InMemoryRepository, menangani penanda selesai melalui checkbox,
- * dan menampilkan kondisi kosong (empty state).
+ * menampilkan kondisi kosong (empty state), dan membuka ItemFormActivity untuk mode tambah & ubah.
  */
 public class AssignmentsFragment extends Fragment {
 
@@ -65,16 +65,26 @@ public class AssignmentsFragment extends Fragment {
             InMemoryRepository.getInstance().setAssignmentCompleted(assignment.getId(), isCompleted);
         });
 
-        // Menangani klik baris (akan membuka form ubah di FE-07)
+        // Menangani klik baris (membuka ItemFormActivity dalam mode ubah)
         adapter.setOnItemClickListener(assignment -> {
-            Toast.makeText(requireContext(), assignment.getName(), Toast.LENGTH_SHORT).show();
+            Intent intent = ItemFormActivity.newIntent(
+                    requireContext(),
+                    ItemFormActivity.TYPE_ASSIGNMENT,
+                    assignment.getId()
+            );
+            startActivity(intent);
         });
     }
 
     private void setupListeners() {
         View.OnClickListener addClickListener = v -> {
-            // Callback tombol tambah (akan membuka form tugas di FE-07)
-            Toast.makeText(requireContext(), getString(R.string.form_item_title_add), Toast.LENGTH_SHORT).show();
+            // Membuka ItemFormActivity dalam mode tambah tugas baru
+            Intent intent = ItemFormActivity.newIntent(
+                    requireContext(),
+                    ItemFormActivity.TYPE_ASSIGNMENT,
+                    -1
+            );
+            startActivity(intent);
         };
 
         fabAddAssignment.setOnClickListener(addClickListener);

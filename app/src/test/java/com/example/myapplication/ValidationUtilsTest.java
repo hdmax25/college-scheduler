@@ -17,6 +17,23 @@ public class ValidationUtilsTest {
     }
 
     @Test
+    public void testIsDateTimeComplete() {
+        assertTrue(ValidationUtils.isDateTimeComplete("2026-11-05", "23:59"));
+        assertFalse(ValidationUtils.isDateTimeComplete("2026-11-05", null));
+        assertFalse(ValidationUtils.isDateTimeComplete(null, "23:59"));
+        assertFalse(ValidationUtils.isDateTimeComplete("", "23:59"));
+        assertFalse(ValidationUtils.isDateTimeComplete("2026-11-05", "  "));
+    }
+
+    @Test
+    public void testIsCourseValid() {
+        assertTrue(ValidationUtils.isCourseValid("Pemrograman Bergerak"));
+        assertFalse(ValidationUtils.isCourseValid(""));
+        assertFalse(ValidationUtils.isCourseValid("  "));
+        assertFalse(ValidationUtils.isCourseValid(null));
+    }
+
+    @Test
     public void testIsTimeAfter() {
         // Valid: jam selesai lebih akhir dari jam mulai
         assertTrue(ValidationUtils.isTimeAfter("08:00", "09:40"));
@@ -34,4 +51,3 @@ public class ValidationUtilsTest {
         assertFalse(ValidationUtils.isTimeAfter("invalid", "time"));
     }
 }
-

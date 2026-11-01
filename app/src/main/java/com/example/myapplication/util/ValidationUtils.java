@@ -11,8 +11,25 @@ import java.util.Locale;
  */
 public class ValidationUtils {
 
+    /**
+     * Memeriksa apakah teks tidak bernilai null dan tidak kosong setelah di-trim.
+     */
     public static boolean isNonEmpty(String text) {
         return text != null && !text.trim().isEmpty();
+    }
+
+    /**
+     * Memeriksa apakah tanggal dan jam terisi lengkap.
+     */
+    public static boolean isDateTimeComplete(String date, String time) {
+        return isNonEmpty(date) && isNonEmpty(time);
+    }
+
+    /**
+     * Memeriksa apakah nama mata kuliah valid (wajib dan tidak kosong).
+     */
+    public static boolean isCourseValid(String course) {
+        return isNonEmpty(course);
     }
 
     /**
@@ -36,4 +53,3 @@ public class ValidationUtils {
         }
     }
 }
-

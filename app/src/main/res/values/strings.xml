@@ -68,13 +68,22 @@
     <!-- Form Item: Tugas, Ujian, Pekerjaan (Item Form) -->
     <string name="form_item_title_add">Tambah Item</string>
     <string name="form_item_title_edit">Ubah Item</string>
+    <string name="title_add_assignment">Tambah Tugas</string>
+    <string name="title_edit_assignment">Ubah Tugas</string>
+    <string name="title_add_exam">Tambah Ujian</string>
+    <string name="title_edit_exam">Ubah Ujian</string>
+    <string name="title_add_task">Tambah Pekerjaan</string>
+    <string name="title_edit_task">Ubah Pekerjaan</string>
+
     <string name="form_item_label_type">Jenis Item</string>
     <string name="form_item_label_name">Nama</string>
     <string name="form_item_hint_name">Contoh: Tugas Praktikum 1</string>
     <string name="form_item_label_course">Mata Kuliah</string>
-    <string name="form_item_hint_course">Masukkan nama mata kuliah</string>
+    <string name="form_item_hint_course">Pilih atau ketik nama mata kuliah</string>
     <string name="form_item_label_date">Tanggal</string>
+    <string name="form_item_hint_date">Pilih tanggal</string>
     <string name="form_item_label_time">Jam</string>
+    <string name="form_item_hint_time">Pilih jam</string>
     <string name="form_item_label_due_date_time">Tenggat (Tanggal &amp; Jam)</string>
     <string name="form_exam_label_date_time">Waktu Ujian (Tanggal &amp; Jam)</string>
     <string name="form_exam_label_location">Lokasi Ujian</string>
@@ -84,6 +93,8 @@
     <string name="error_name_required">Nama wajib diisi</string>
     <string name="error_course_required">Mata kuliah wajib diisi</string>
     <string name="error_date_time_required">Tanggal dan jam harus terisi lengkap</string>
+    <string name="error_date_required">Tanggal wajib dipilih</string>
+    <string name="error_time_required">Jam wajib dipilih</string>
     <string name="error_end_time_before_start">Jam selesai harus setelah jam mulai</string>
     <string name="error_days_required">Pilih minimal satu hari kuliah</string>
 
@@ -108,8 +119,18 @@
     <string name="dialog_select_days">Pilih Hari Kuliah</string>
     <string name="picker_start_time">Pilih Jam Mulai</string>
     <string name="picker_end_time">Pilih Jam Selesai</string>
+    <string name="picker_date">Pilih Tanggal</string>
+    <string name="picker_time">Pilih Jam</string>
+
     <string name="msg_class_added">Kelas berhasil ditambahkan</string>
     <string name="msg_class_updated">Kelas berhasil diperbarui</string>
+
+    <string name="msg_assignment_added">Tugas berhasil ditambahkan</string>
+    <string name="msg_assignment_updated">Tugas berhasil diperbarui</string>
+    <string name="msg_exam_added">Ujian berhasil ditambahkan</string>
+    <string name="msg_exam_updated">Ujian berhasil diperbarui</string>
+    <string name="msg_task_added">Pekerjaan berhasil ditambahkan</string>
+    <string name="msg_task_updated">Pekerjaan berhasil diperbarui</string>
 
     <string name="content_description_add_assignment">Tambah Tugas Baru</string>
     <string name="btn_add_first_assignment">Tambah Tugas Sekarang</string>
